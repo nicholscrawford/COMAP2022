@@ -1,11 +1,11 @@
 %% Effect of of varying U
-Q = 0.5*ones(5,1);
+Q = 0.2*ones(5,1);
 u = 0:0.01:1;
 W1 = zeros(size(u));
 W2 = zeros(size(u));
 W3 = zeros(size(u));
 for i = 1:length(u)
-    Y1 = unitIncomes(u(i),Q,0.25);
+    Y1 = unitIncomes(u(i),Q,0.12);
     Y2 = unitIncomes(u(i),Q,0.5);
     Y3 = unitIncomes(u(i),Q,0.75);
     W1(i) = WF(Y1);
@@ -43,11 +43,12 @@ set (gca, 'linewidth', 4)
 
 %% Two export rates model
 U = 0;
+x = 0:0.01:1;
 W1 = zeros(size(u));
 W2 = zeros(size(u));
 W3 = zeros(size(u));
-for x = 0:0.01:1
-    Q = [x;x;x;1-x;1-x];
+for i = 1:length(x)
+    Q = [x(i);x(i);x(i);1-x(i);1-x(i)];
     Y1 = unitIncomes(U,Q,0.25);
     Y2 = unitIncomes(U,Q,0.5);
     Y3 = unitIncomes(U,Q,0.75);
@@ -56,6 +57,96 @@ for x = 0:0.01:1
     W3(i) = WF(Y3);
 end
 figure(2)
+sgtitle('Two Export Rates Model')
+subplot(3,1,1)
+
+plot(x,W1, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+subplot(3,1,2)
+
+plot(x,W2, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+subplot(3,1,3)
+
+plot(x,W3, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+
+%% One Export Rate Model
+U = 0;
+x = 0:0.01:1;
+W1 = zeros(size(u));
+W2 = zeros(size(u));
+W3 = zeros(size(u));
+for i = 1:length(x)
+    Q = [x(i);x(i);x(i);x(i);x(i)];
+    Y1 = unitIncomes(U,Q,0.25);
+    Y2 = unitIncomes(U,Q,0.5);
+    Y3 = unitIncomes(U,Q,0.75);
+    W1(i) = WF(Y1);
+    W2(i) = WF(Y2);
+    W3(i) = WF(Y3);
+end
+figure(3)
+sgtitle('One Export Rate Model')
+subplot(3,1,1)
+
+plot(x,W1, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+subplot(3,1,2)
+
+plot(x,W2, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+subplot(3,1,3)
+
+plot(x,W3, "LineWidth", 2)
+xlabel('U')
+ylabel('W_F')
+ylim([0 1])
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
+%% Really Cool plot
+Q = 0.2*ones(5,1);
+e = 0:0.01:1;
+dWdU = zeros(size(e));
+for i = 1:length(e)
+    dWdU(i) =  WF( unitIncomes( 1,Q,e(i) ) ) - WF( unitIncomes( 0,Q,e(i) ) );
+end
+figure(4)
+plot(e,dWdU,"LineWidth",2)
+title('W_F-U Relationship as E Varies')
+hold on
+yline(0)
+xlabel('E')
+ylabel('dW_F/dU')
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
+
 
 %% Functions
 
