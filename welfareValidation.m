@@ -34,7 +34,7 @@ WF([5,25],P)
 %% Necessary Functions
 
 function out =  WF(Yraw,P)
-    Y = Yraw./P
+    Y = Yraw./P;
     out = YBar(Y)*exp(-TL(Y));
 end
 
