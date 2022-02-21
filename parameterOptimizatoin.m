@@ -5,7 +5,7 @@ W1 = zeros(size(u));
 W2 = zeros(size(u));
 W3 = zeros(size(u));
 for i = 1:length(u)
-    Y1 = unitIncomes(u(i),Q,0.12);
+    Y1 = unitIncomes(u(i),Q,0.25);
     Y2 = unitIncomes(u(i),Q,0.5);
     Y3 = unitIncomes(u(i),Q,0.75);
     W1(i) = WF(Y1);
@@ -42,16 +42,16 @@ set (gcf, 'color', 'w');
 set (gca, 'linewidth', 4)
 
 %% Two export rates model
-U = 0;
 x = 0:0.01:1;
+E = 1;
 W1 = zeros(size(u));
 W2 = zeros(size(u));
 W3 = zeros(size(u));
 for i = 1:length(x)
     Q = [x(i);x(i);x(i);1-x(i);1-x(i)];
-    Y1 = unitIncomes(U,Q,0.25);
-    Y2 = unitIncomes(U,Q,0.5);
-    Y3 = unitIncomes(U,Q,0.75);
+    Y1 = unitIncomes(0.25,Q,E);
+    Y2 = unitIncomes(0.5,Q,E);
+    Y3 = unitIncomes(0.75,Q,E);
     W1(i) = WF(Y1);
     W2(i) = WF(Y2);
     W3(i) = WF(Y3);
@@ -61,7 +61,7 @@ sgtitle('Two Export Rates Model')
 subplot(3,1,1)
 
 plot(x,W1, "LineWidth", 2)
-xlabel('U')
+xlabel('q')
 ylabel('W_F')
 ylim([0 1])
 set (gcf, 'color', 'w');
@@ -70,7 +70,7 @@ set (gca, 'linewidth', 4)
 subplot(3,1,2)
 
 plot(x,W2, "LineWidth", 2)
-xlabel('U')
+xlabel('q')
 ylabel('W_F')
 ylim([0 1])
 set (gcf, 'color', 'w');
@@ -79,12 +79,18 @@ set (gca, 'linewidth', 4)
 subplot(3,1,3)
 
 plot(x,W3, "LineWidth", 2)
-xlabel('U')
+xlabel('q')
 ylabel('W_F')
 ylim([0 1])
 set (gcf, 'color', 'w');
 set (gca, 'linewidth', 4)
-
+% plot(x,W1, "LineWidth", 2)
+% title('Effect of Varying q')
+% xlabel('q')
+% ylabel('W_F')
+% ylim([0 1])
+% set (gcf, 'color', 'w');
+% set (gca, 'linewidth', 4)
 
 %% One Export Rate Model
 U = 0;
@@ -101,30 +107,38 @@ for i = 1:length(x)
     W2(i) = WF(Y2);
     W3(i) = WF(Y3);
 end
+% figure(3)
+% sgtitle('One Export Rate Model')
+% subplot(3,1,1)
+% 
+% plot(x,W1, "LineWidth", 2)
+% xlabel('U')
+% ylabel('W_F')
+% ylim([0 1])
+% set (gcf, 'color', 'w');
+% set (gca, 'linewidth', 4)
+% 
+% subplot(3,1,2)
+% 
+% plot(x,W2, "LineWidth", 2)
+% xlabel('U')
+% ylabel('W_F')
+% ylim([0 1])
+% set (gcf, 'color', 'w');
+% set (gca, 'linewidth', 4)
+% 
+% subplot(3,1,3)
+% 
+% plot(x,W3, "LineWidth", 2)
+% xlabel('U')
+% ylabel('W_F')
+% ylim([0 1])
+% set (gcf, 'color', 'w');
+% set (gca, 'linewidth', 4)
 figure(3)
-sgtitle('One Export Rate Model')
-subplot(3,1,1)
-
 plot(x,W1, "LineWidth", 2)
-xlabel('U')
-ylabel('W_F')
-ylim([0 1])
-set (gcf, 'color', 'w');
-set (gca, 'linewidth', 4)
-
-subplot(3,1,2)
-
-plot(x,W2, "LineWidth", 2)
-xlabel('U')
-ylabel('W_F')
-ylim([0 1])
-set (gcf, 'color', 'w');
-set (gca, 'linewidth', 4)
-
-subplot(3,1,3)
-
-plot(x,W3, "LineWidth", 2)
-xlabel('U')
+title('Effect of Varying Q_i')
+xlabel('Q_i')
 ylabel('W_F')
 ylim([0 1])
 set (gcf, 'color', 'w');
@@ -147,6 +161,21 @@ ylabel('dW_F/dU')
 set (gcf, 'color', 'w');
 set (gca, 'linewidth', 4)
 
+%% 
+x = 0:0.01:1;
+W = zeros(size(u));
+for i = 1:length(x)
+    Q = [x(i);x(i);x(i);1-x(i);1-x(i)];
+    for j = 1:length(e)
+        dWdU(i) =  WF( unitIncomes( 1,Q,e(j) ) ) - WF( unitIncomes( 0,Q,e(j) ) );
+        [~,index(i)] = min(abs(dWdU));
+    end
+end
+
+
+
+
+
 
 %% Functions
 
@@ -158,7 +187,7 @@ function out = unitIncomes(U,Q,E)
         0.31 , 0.19 , 0.47 , 0.34 , 0.8 ;
         0.015 , 0.016 , 0.043 , 0.19 , 0.008 ;
         0.019 , 0.0082 , 0.024 , 0.0065 , 0.037];
-    out = (1-U)*S+(T-eye(5))*S.*Q + E*U*sum(S)*P;
+    out = (1-U)*S+(1-U)*(T-eye(5))*S.*Q + E*U*sum(S)*P;
 end
 
 function out =  WF(Yraw)
