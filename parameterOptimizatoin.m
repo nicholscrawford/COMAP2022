@@ -161,19 +161,25 @@ ylabel('dW_F/dU')
 set (gcf, 'color', 'w');
 set (gca, 'linewidth', 4)
 
-%% 
+%% Final Figure
 x = 0:0.01:1;
-W = zeros(size(u));
+e = 0:0.01:1;
+dWdU = zeros(size(e));
 for i = 1:length(x)
     Q = [x(i);x(i);x(i);1-x(i);1-x(i)];
     for j = 1:length(e)
         dWdU(i) =  WF( unitIncomes( 1,Q,e(j) ) ) - WF( unitIncomes( 0,Q,e(j) ) );
-        [~,index(i)] = min(abs(dWdU));
+        [~,index] = min(abs(dWdU));
+        val(i) = e(index);
     end
 end
-
-
-
+figure(5)
+plot(x,val,"LineWidth",2)
+title('Threshold Efficiencies as q Varies')
+xlabel('q')
+ylabel('E_{Threshold}')
+set (gcf, 'color', 'w');
+set (gca, 'linewidth', 4)
 
 
 
